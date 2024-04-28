@@ -49,7 +49,7 @@ export const recipe_ingredients = createTable(
   "recipe_ingredient",
   {
     id: serial("id").notNull(),
-    userId: varchar("authorId", { length: 256 }).notNull(),
+    userId: varchar("userId", { length: 256 }).notNull(),
     recipeId: integer("recipeId").notNull(),
     sortOrder: serial("sortOrder").notNull(),
     description: varchar("description", { length: 256 }),
@@ -75,9 +75,31 @@ export const recipe_steps = createTable(
   "recipe_step",
   {
     id: serial("id").notNull(),
-    userId: varchar("authorId", { length: 256 }).notNull(),
+    userId: varchar("userId", { length: 256 }).notNull(),
     recipeId: integer("recipeId").notNull(),
     sortOrder: serial("sortOrder").notNull(),
+  },
+  (table) => {
+    return {
+      primaryKey: primaryKey({
+        columns: [table.id, table.userId, table.recipeId],
+      }),
+      foreignKey: foreignKey({
+        columns: [table.userId, table.recipeId],
+        foreignColumns: [recipes.userId, recipes.id],
+      }),
+    };
+  },
+);
+
+export const recipe_images = createTable(
+  "recipe_image",
+  {
+    id: serial("id").notNull(),
+    userId: varchar("userId", { length: 256 }).notNull(),
+    recipeId: integer("recipeId").notNull(),
+    sortOrder: serial("sortOrder").notNull(),
+    url: varchar("url", { length: 256 }),
   },
   (table) => {
     return {
