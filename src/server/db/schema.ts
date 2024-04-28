@@ -1,7 +1,6 @@
 // Example model schema from the Drizzle docs
 // https://orm.drizzle.team/docs/sql-schema-declaration
 
-import { sql } from "drizzle-orm";
 import {
   boolean,
   foreignKey,
@@ -30,7 +29,7 @@ export const recipes = createTable(
     createdAt: timestamp("createdAt").defaultNow().notNull(),
     updatedAt: timestamp("updatedAt").defaultNow(),
     title: varchar("title", { length: 64 }).notNull(),
-    description: varchar("title", { length: 512 }),
+    description: varchar("description", { length: 512 }),
     private: boolean("private").default(false).notNull(),
   },
   (example) => {
