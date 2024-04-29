@@ -3,13 +3,13 @@
 
 import {
   boolean,
-  foreignKey,
   index,
   integer,
   pgTableCreator,
   primaryKey,
   serial,
   timestamp,
+  uuid,
   varchar,
 } from "drizzle-orm/pg-core";
 
@@ -24,7 +24,7 @@ export const createTable = pgTableCreator((name) => `reppo_${name}`);
 export const recipes = createTable(
   "recipe",
   {
-    id: serial("id").notNull(),
+    id: uuid("id").defaultRandom().notNull().primaryKey(),
     userId: varchar("userId", { length: 256 }).notNull(),
     createdAt: timestamp("createdAt").defaultNow().notNull(),
     updatedAt: timestamp("updatedAt").defaultNow(),
@@ -32,10 +32,9 @@ export const recipes = createTable(
     description: varchar("description", { length: 512 }),
     private: boolean("private").default(false).notNull(),
   },
-  (example) => {
+  (table) => {
     return {
-      primaryKey: primaryKey({ columns: [example.id, example.userId] }),
-      titleIndex: index("title_idx").on(example.title),
+      titleIndex: index("title_idx").on(table.title),
     };
   },
 );
@@ -49,8 +48,9 @@ export const recipe_ingredients = createTable(
   "recipe_ingredient",
   {
     id: serial("id").notNull(),
-    userId: varchar("userId", { length: 256 }).notNull(),
-    recipeId: integer("recipeId").notNull(),
+    recipeId: uuid("recipeId")
+      .notNull()
+      .references(() => recipes.id),
     sortOrder: serial("sortOrder").notNull(),
     description: varchar("description", { length: 256 }),
     quantity: integer("quantity"),
@@ -58,14 +58,10 @@ export const recipe_ingredients = createTable(
       onDelete: "restrict",
     }),
   },
-  (example) => {
+  (table) => {
     return {
       primaryKey: primaryKey({
-        columns: [example.id, example.userId, example.recipeId],
-      }),
-      foreignKey: foreignKey({
-        columns: [example.userId, example.recipeId],
-        foreignColumns: [recipes.userId, recipes.id],
+        columns: [table.id, table.recipeId],
       }),
     };
   },
@@ -75,18 +71,15 @@ export const recipe_steps = createTable(
   "recipe_step",
   {
     id: serial("id").notNull(),
-    userId: varchar("userId", { length: 256 }).notNull(),
-    recipeId: integer("recipeId").notNull(),
+    recipeId: uuid("recipeId")
+      .notNull()
+      .references(() => recipes.id),
     sortOrder: serial("sortOrder").notNull(),
   },
   (table) => {
     return {
       primaryKey: primaryKey({
-        columns: [table.id, table.userId, table.recipeId],
-      }),
-      foreignKey: foreignKey({
-        columns: [table.userId, table.recipeId],
-        foreignColumns: [recipes.userId, recipes.id],
+        columns: [table.id, table.recipeId],
       }),
     };
   },
@@ -96,19 +89,16 @@ export const recipe_images = createTable(
   "recipe_image",
   {
     id: serial("id").notNull(),
-    userId: varchar("userId", { length: 256 }).notNull(),
-    recipeId: integer("recipeId").notNull(),
+    recipeId: uuid("recipeId")
+      .notNull()
+      .references(() => recipes.id),
     sortOrder: serial("sortOrder").notNull(),
     url: varchar("url", { length: 256 }),
   },
   (table) => {
     return {
       primaryKey: primaryKey({
-        columns: [table.id, table.userId, table.recipeId],
-      }),
-      foreignKey: foreignKey({
-        columns: [table.userId, table.recipeId],
-        foreignColumns: [recipes.userId, recipes.id],
+        columns: [table.id, table.recipeId],
       }),
     };
   },

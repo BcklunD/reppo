@@ -12,6 +12,10 @@ export const ourFileRouter = {
   imageUploader: f({ image: { maxFileSize: "4MB", maxFileCount: 4 } })
     // Set permissions and file types for this FileRoute
     .middleware(async ({ req }) => {
+      // TODO: Se till att recipe ID hänger med i requestet och skicka med i metadata
+      // Kolla så att detta recept inte har fler än 4 bilder
+      // Kolla så att userid matchar authorID på receptet
+
       // This code runs on your server before upload
       const user = auth();
 
@@ -25,11 +29,10 @@ export const ourFileRouter = {
       // This code RUNS ON YOUR SERVER after upload
       console.log("Upload complete for userId:", metadata.userId);
 
-      await db.insert(recipe_images).values({
-        userId: metadata.userId,
-        recipeId: 2,
-        url: file.url,
-      });
+      // await db.insert(recipe_images).values({
+      //   recipeId: 2,
+      //   url: file.url,
+      // });
 
       // !!! Whatever is returned here is sent to the clientside `onClientUploadComplete` callback
       return { uploadedBy: metadata.userId };
