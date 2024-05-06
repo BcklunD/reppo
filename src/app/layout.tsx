@@ -2,10 +2,11 @@ import "~/styles/globals.css";
 
 import { Inter } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
-import { TopNav } from "./_components/topnav";
 import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import { extractRouterConfig } from "uploadthing/server";
 import { ourFileRouter } from "./api/uploadthing/core";
+import { cn } from "~/lib/utils";
+import { TopNav } from "./_components/Topnav";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -37,7 +38,12 @@ export default function RootLayout({
            */
           routerConfig={extractRouterConfig(ourFileRouter)}
         />
-        <body className={`font-sans ${inter.variable}`}>
+        <body
+          className={cn(
+            "container mx-auto min-h-screen bg-background font-sans antialiased",
+            inter.variable,
+          )}
+        >
           <TopNav />
           {children}
           {modal}

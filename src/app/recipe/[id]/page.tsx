@@ -1,4 +1,4 @@
-export default function RecipeModal({
+export default function Recipe({
   params: { id: recipeId },
 }: {
   params: { id: string };

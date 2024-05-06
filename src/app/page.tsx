@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { db } from "~/server/db";
 import { recipes } from "~/server/db/schema";
 
@@ -9,6 +10,7 @@ export default async function HomePage() {
 
   return (
     <main className="">
+      <Link href="/recipes/cook">Nytt recept</Link>
       <div className="flex flex-wrap gap-4">
         {data.map((recipe: any) => (
           <div key={`${recipe.id}-${recipe.userId}`}>
