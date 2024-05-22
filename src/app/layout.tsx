@@ -6,7 +6,7 @@ import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import { extractRouterConfig } from "uploadthing/server";
 import { ourFileRouter } from "./api/uploadthing/core";
 import { cn } from "~/lib/utils";
-import { TopNav } from "./_components/Topnav";
+import { Topnav } from "./_components/Topnav";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -44,7 +44,7 @@ export default function RootLayout({
             inter.variable,
           )}
         >
-          <TopNav />
+          <Topnav />
           {children}
           {modal}
           <div id="modal-root"></div>

@@ -103,3 +103,22 @@ export const recipe_images = createTable(
     };
   },
 );
+
+export const recipe_likes = createTable(
+  "recipe_like",
+  {
+    id: serial("id").notNull(),
+    recipeId: uuid("recipeId")
+      .notNull()
+      .references(() => recipes.id),
+    userId: varchar("userId", { length: 256 }).notNull(),
+    time: timestamp("time").defaultNow().notNull(),
+  },
+  (table) => {
+    return {
+      primaryKey: primaryKey({
+        columns: [table.id, table.recipeId, table.userId],
+      }),
+    };
+  },
+);
